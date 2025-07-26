@@ -16,8 +16,8 @@ Construido con:
 
 Servidor alojado:
 
-- URL alojado GIT: []()
-- URL del sitio: []()
+- URL alojado GIT: [https://github.com/amigos81/Password-generator-app](https://github.com/amigos81/Password-generator-app)
+- URL del sitio: [https://snazzy-churros-ff8751.netlify.app/](https://snazzy-churros-ff8751.netlify.app/)
 
 ## Autor
 
