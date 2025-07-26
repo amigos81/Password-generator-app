@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon-32x32.png">
+
+  <title>Frontend Mentor | Password generator app</title>
+  <link rel="stylesheet" href="/assets/css/style.css">
+</head>
+
+<body>
+  <main>
+
+    <div class="container">
+      <div class="card">
+        <h1 class="title">Password Generator</h1>
+        <div class="group-password">
+          <input type="text" id="password-input" placeholder="P4$5W0rD!">
+          <span id="alert-copied" class="alert-copied">COPIED</span>
+          <button id="copy-button">
+            <svg id="icon-copy" class="icon-copy" width="21" height="24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M20.341 3.091 17.909.659A2.25 2.25 0 0 0 16.319 0H8.25A2.25 2.25 0 0 0 6 2.25V4.5H2.25A2.25 2.25 0 0 0 0 6.75v15A2.25 2.25 0 0 0 2.25 24h10.5A2.25 2.25 0 0 0 15 21.75V19.5h3.75A2.25 2.25 0 0 0 21 17.25V4.682a2.25 2.25 0 0 0-.659-1.591ZM12.469 21.75H2.53a.281.281 0 0 1-.281-.281V7.03a.281.281 0 0 1 .281-.281H6v10.5a2.25 2.25 0 0 0 2.25 2.25h4.5v1.969a.282.282 0 0 1-.281.281Zm6-4.5H8.53a.281.281 0 0 1-.281-.281V2.53a.281.281 0 0 1 .281-.281H13.5v4.125c0 .621.504 1.125 1.125 1.125h4.125v9.469a.282.282 0 0 1-.281.281Zm.281-12h-3v-3h.451c.075 0 .147.03.2.082L18.667 4.6a.283.283 0 0 1 .082.199v.451Z" />
+            </svg>
+          </button>
+        </div>
+        <div class="settings">
+          <div class="group-length">
+            <div class="label-length">
+              <label for="length">Character Length</label>
+              <span id="total-character" class="total-character">10</span>
+            </div>
+            <input type="range" id="length-character-input" min="0" max="20" value="10">
+          </div>
+          <div class="options">
+            <div class="option">
+              <input class="style-checkbox" type="checkbox" id="uppercase">
+              <label for="uppercase">Include Uppercase Letters</label>
+            </div>
+            <div class="option">
+              <input class="style-checkbox" type="checkbox" id="lowercase">
+              <label for="lowercase">Include Lowercase Letters</label>
+            </div>
+            <div class="option">
+              <input class="style-checkbox" type="checkbox" id="numbers">
+              <label for="numbers">Include Numbers</label>
+            </div>
+            <div class="option">
+              <input class="style-checkbox" type="checkbox" id="symbols">
+              <label for="symbols">Include Symbols</label>
+            </div>
+          </div>
+          <div class="strength">
+            <div class="strength-text">STRENGTH</div>
+            <div class="strength-level-bar-container">
+              <div id="strength-level-text" class="strength-level-text"></div>
+              <span class="strength-level-bar"></span>
+              <span class="strength-level-bar"></span>
+              <span class="strength-level-bar"></span>
+              <span class="strength-level-bar"></span>
+            </div>
+          </div>
+          <button id="generate-button" class="generate-button">GENERATE
+            <svg class="generate-button-icon" width="12" height="12" xmlns="http://www.w3.org/2000/svg"><path d="m5.106 12 6-6-6-6-1.265 1.265 3.841 3.84H.001v1.79h7.681l-3.841 3.84z"/></svg>
+          </button>
+
+        </div>
+      </div>
+
+
+
+  </main>
+  <script>
+    const copyButton = document.getElementById('copy-button');
+    const passwordInput = document.getElementById('password-input');
+    const alertCopied = document.getElementById('alert-copied');
+    const iconCopy = document.getElementById('icon-copy');
+    const lengthCharacterInput = document.getElementById('length-character-input');
+    const generateButton = document.getElementById('generate-button');
+    const totalCharacter = document.getElementById('total-character');
+    const strengthLevelText = document.getElementById('strength-level-text');
+
+    copyButton.addEventListener('click', () => {
+      navigator.clipboard.writeText(passwordInput.value)
+        .then(() => {
+          alertCopied.style.display = 'block';
+          iconCopy.style.fill = 'var(--green-200)';
+          setTimeout(() => {
+            alertCopied.style.display = 'none';
+            iconCopy.style.fill = 'var(--white)';
+          }, 5000);
+        })
+        .catch(error => {
+          console.error("Error al copiar: ", error);
+        });
+    });
+
+    lengthCharacterInput.addEventListener('input', () => {
+      totalCharacter.textContent = lengthCharacterInput.value;
+      lengthCharacterInput.style.background = `linear-gradient(to right, #a4ffaf ${(lengthCharacterInput.value / 2) * 10}%, #1c1b23 ${((lengthCharacterInput.value / 2) * 10)}%)`;
+    });
+
+    generateButton.addEventListener('click', () => {
+      const length = parseInt(lengthCharacterInput.value, 10);
+      const includeUppercase = document.getElementById('uppercase').checked;
+      const includeLowercase = document.getElementById('lowercase').checked;
+      const includeNumbers = document.getElementById('numbers').checked;
+      const includeSymbols = document.getElementById('symbols').checked;
+
+      // const strengthLevelBar = document.querySelector('#strength-level-bar');
+      const strengthLevelBar = document.querySelectorAll('.strength-level-bar');
+
+      let characters = '';
+      let level = 0;
+      if (includeUppercase) {
+        level++;
+        characters += 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+      }
+      if (includeLowercase) {
+        level++;
+        characters += 'abcdefghijklmnopqrstuvwxyz';
+      }
+      if (includeNumbers) {
+        level++;
+        characters += '0123456789';
+      }
+      if (includeSymbols) {
+        level++;
+        characters += '[]{};:,.!@#$&*()_+|<>?%^';
+      }
+
+      strengthLevelText.textContent = '';
+
+      if (characters.length === 0) {
+        alert('Seleccionar el tipo de caracter a generar.');
+        return;
+      }
+
+      strengthLevelBar.forEach(span => {
+        span.style.backgroundColor = "transparent";
+        span.style = "1px solid var(--grey-200)";
+      });
+
+      for (let i = 0; i < level; i++) {
+        if (level === 1) {
+          strengthLevelBar[i].style.backgroundColor = 'var(--red-500)';
+          strengthLevelBar[i].style.border = "none";
+          strengthLevelText.textContent = 'TOO WEAK!';
+        } else if (level === 2) {
+          strengthLevelBar[i].style.backgroundColor = 'var(--orange-400)';
+          strengthLevelBar[i].style.border = "none";
+          strengthLevelText.textContent = 'WEAK';
+        } else if (level === 3) {
+          strengthLevelBar[i].style.backgroundColor = 'var(--yellow-300)';
+          strengthLevelBar[i].style.border = "none";
+          strengthLevelText.textContent = 'MEDIUM';
+        } else if (level === 4) {
+          strengthLevelBar[i].style.backgroundColor = 'var(--green-200)';
+          strengthLevelBar[i].style.border = "none";
+          strengthLevelText.textContent = 'STRONG';
+        }
+      }
+
+      let password = '';
+      for (let i = 1; i <= length; i++) {
+        password += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      passwordInput.value = password;
+    });
+
+  </script>
+</body>
+
+</html>
